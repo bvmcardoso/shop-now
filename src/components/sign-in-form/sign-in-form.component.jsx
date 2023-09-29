@@ -8,6 +8,7 @@ import {
 import FormInput from '../form-input/form-input.component';
 import './sign-in-form.styles.scss';
 import Button from '../button/button.component';
+import { UserContext } from '../../contexts/user.context';
 
 const defaultFormFields = {
   email: '',
@@ -20,8 +21,8 @@ const SignInForm = () => {
   const { email, password } = formFields;
 
   const signInWithGoogle = async () => {
-    const { user } = await signInWithGooglePopup();
-    await createUserDocumentFromAuth(user);
+    await signInWithGooglePopup();
+    
   };
 
   const handleChange = (event) => {
@@ -32,11 +33,11 @@ const SignInForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await signInAuthUserWithEmailAndPassword(
+      const { user } = await signInAuthUserWithEmailAndPassword(
         email,
         password
       );
-      resetFormFields(response);
+      resetFormFields();
     } catch (error) {
       switch (error.code) {
         case 'auth/invalid-login-credentials':
